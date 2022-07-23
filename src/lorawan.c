@@ -231,30 +231,20 @@ static int lorawan_init(const struct lorawan_sx12xx_settings* sx12xx_settings, L
     }
 
 #elif defined sx126x
-    Gpio_t gpio_busy;
-    Gpio_t gpio_dio1;
-    Gpio_t gpio_reset;
-    Gpio_t gpio_nss;
 
-    Spi_t spi1_t;
-
-    gpio_busy.pin = RADIO_BUSY;
-    gpio_dio1.pin = RADIO_DIO_1;
-    gpio_reset.pin = RADIO_RESET;
-    gpio_nss.pin = RADIO_NSS;
-    spi1_t.Nss = gpio_nss;
-// raspberry pi pico spi1
-    spi1_t.SpiId = SPI_2;
-
-    SX126x.BUSY = gpio_busy;
-    SX126x.DIO1 = gpio_dio1;
-    SX126x.Reset = gpio_reset;
-    SX126x.Spi = spi1_t;
-    SpiInit( &SX126x.Spi, SPI_2, RADIO_MOSI, RADIO_MISO, RADIO_SCLK, NC );
+    SpiInit(
+        &SX126x.Spi,
+        (SpiId_t)((sx12xx_settings->spi.inst == spi0) ? 0 : 1),
+        sx12xx_settings->spi.mosi /*MOSI*/,
+        sx12xx_settings->spi.miso /*MISO*/,
+        sx12xx_settings->spi.sck /*SCK*/, 
+        NC
+    );
 
     SX126x.Spi.Nss.pin = sx12xx_settings->spi.nss;
     SX126x.Reset.pin = sx12xx_settings->reset;
     SX126x.DIO1.pin = sx12xx_settings->dio1;
+    SX126x.BUSY.pin = sx12xx_settings->busy;
 
     SX126xIoInit();
 #endif
