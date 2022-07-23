@@ -20,7 +20,7 @@ set(LORAMAC_NODE_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/LoRaMac-node)
 option(WITH_WAVESHARE_SX126X "Enable Waveshare SX1262 Raspberry Pi LoRa module support instead of SX1276" OFF)
 
 # Enable for use with SX126X, e.g. Waveshare Raspberry Pi Pico LoRa module SX1262 by uncommenting:
-#set(WITH_WAVESHARE_SX126X ON)
+set(WITH_WAVESHARE_SX126X ON)
 
 ## Depending on previous selection, add the following items
 if(WITH_WAVESHARE_SX126X)

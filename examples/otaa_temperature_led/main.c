@@ -25,17 +25,36 @@
 /*
  * Pin configuration for SX1276 radio module (default)
  */
+// const struct lorawan_sx12xx_settings sx12xx_settings = {
+//     .spi = {
+//         .inst = PICO_DEFAULT_SPI_INSTANCE,
+//         .mosi = PICO_DEFAULT_SPI_TX_PIN,
+//         .miso = PICO_DEFAULT_SPI_RX_PIN,
+//         .sck  = PICO_DEFAULT_SPI_SCK_PIN,
+//         .nss  = 8
+//     },
+//     .reset = 9,
+//     .dio0  = 7,
+//     .dio1  = 10
+// };
+
+/*
+ * Pin configuration for 01space RP2040-1.14LCD
+ */
+
+#define LED_PIN 14
+
 const struct lorawan_sx12xx_settings sx12xx_settings = {
     .spi = {
         .inst = PICO_DEFAULT_SPI_INSTANCE,
         .mosi = PICO_DEFAULT_SPI_TX_PIN,
         .miso = PICO_DEFAULT_SPI_RX_PIN,
         .sck  = PICO_DEFAULT_SPI_SCK_PIN,
-        .nss  = 8
+        .nss  = 14
     },
-    .reset = 9,
-    .dio0  = 7,
-    .dio1  = 10
+    .reset = 7,
+    .dio1  = 13,
+    .busy = 15
 };
 
 /*
@@ -82,13 +101,13 @@ int main( void )
     printf("Pico LoRaWAN - OTAA - Temperature + LED\n\n");
 
     // initialize the LED pin and internal temperature ADC
-    gpio_init(PICO_DEFAULT_LED_PIN);
-    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
 
     internal_temperature_init();
 
     // uncomment next line to enable debug
-    // lorawan_debug(true);
+    lorawan_debug(true);
 
     // initialize the LoRaWAN stack
     printf("Initilizating LoRaWAN ... ");
@@ -137,7 +156,7 @@ int main( void )
                 printf("\n");
 
                 // the first byte of the received message controls the on board LED
-                gpio_put(PICO_DEFAULT_LED_PIN, receive_buffer[0]);
+                gpio_put(LED_PIN, receive_buffer[0]);
             }
         }
     }
